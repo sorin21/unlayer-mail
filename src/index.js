@@ -16,7 +16,7 @@ const TOKEN =
 
 axios.defaults.baseURL = "http://192.168.100.118:8080";
 // axios.defaults.headers.common['X-AUTH-TOKEN'] = TOKEN;
-axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+// axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 axios.interceptors.request.use((request) => {

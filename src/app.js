@@ -19,7 +19,6 @@ class App extends Component {
 
       if (template) {
         this.setState(() => ({ template }));
-        // console.log(template);
       }
     } catch (error) {
       console.log(error);
@@ -32,21 +31,20 @@ class App extends Component {
   //     console.log("componentDidUpdate");
 
   // }
-
+// DOUA SELECTURI: LIMBA SI EMAIL TYPE
   exportHtml = () => {
     this.editor.exportHtml(data => {
       const { design, html } = data;
-      // this.setState(() => ({ template: html }));
       const template = {
+        eventId: 'ala bala portocala event id',
+        subject: 'this is the subject',
+        languageId: 2,
+        templateType: 5,
         htmlTemplate: html,
-        jsonTemplate: JSON.stringify(design)
+        jsonTemplate: JSON.stringify(design),
       }
 
-      // JSON.stringify(template);
       console.log('html', template);
-      // console.log("design", template.design);
-       
-      // console.log("html: ", htmlTemplate);
       axios
         .post("/getX", template)
         .then(response => {
@@ -54,67 +52,39 @@ class App extends Component {
           this.setState(() => ({ html: "The Template was send!" }));
         })
         .catch(error => {
-          // console.log("error from post catch", JSON.parse(htmlTemplate));
           this.setState(() => ({ html: "The Template was not send!" }));
         });
     });
-    // console.log("html: ", this.state.template);
-    const post = {
-      // eventId: "qsy6i66x3jun9sb4u0frznrh2", 
-      // templateTypeId: 2,
-      // templateTypeName: "reminder",
-      // edit: "bgf14be",
-      template: JSON.stringify(this.state.template)
-    //   metadata: null,
-    //   active: false,
-    //   description: "reminder template liviu",
-    //   languageId: 17
-    };
-
-   
-    // axios
-    //   .post("/getX", post)
-    //   .then(response => {
-    //     console.log("response: ", response);
-    //     this.setState(() => ({ html: "The Template was send!" }));
-    //   })
-    //   .catch(error => {
-    //     console.log("error from post catch", JSON.parse(post));
-    //     this.setState(() => ({ html: "The Template was not send!" }));
-    //   });
   };
+
   saveHtml = () => {
     this.editor.exportHtml(data => {
       const { design, html } = data;
       this.setState(() => ({
-        template: html,
+        template: design,
         html: "The Template was saved!"
       }));
       const json = JSON.stringify(this.state.template);
       localStorage.setItem("template", json);
-      console.log("design", design);
     });
   }
+
   loadDesign = () => {
-    const json = localStorage.getItem("template");
-    const template = JSON.parse(json);
+    // const json = localStorage.getItem("template");
+    // const template = JSON.parse(json);
 
-    this.editor.loadDesign(template);
+    // this.editor.loadDesign(template);
     this.setState(() => ({ html: 'The Template was loaded in the Editor!'}));    
-    // console.log("object", template);
-
-    // axios
-    //   .post("/getX", template)
-    //   .then(response => {
-    //     console.log("response: ", response);
-    //     this.setState(() => ({ html: "The Template was send!" }));
-    //     console.log("error from post catch", template);
-        
-    //   })
-    //   .catch(error => {
-    //     console.log("error from post catch", JSON.parse(template));
-    //     this.setState(() => ({ html: "The Template was not send!" }));
-    //   });
+    axios.post('/takeJson')
+      .then(response => {
+        console.log("response: ", JSON.parse(JSON.stringify(response)));
+        this.editor.loadDesign(response.data);
+        this.setState(() => ({ html: "The Template was received!" }));
+      })
+      .catch(error => {
+        this.setState(() => ({ html: "The Template was not received!" }));
+        console.log("error from takeJson", error);
+      });
   };
 
   render() {
