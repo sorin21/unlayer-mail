@@ -1,0 +1,28 @@
+Email Temaplate Builder Documentation
+
+1. Open the email template builder
+
+2. Choose, from the top right menu, middle tab(hamburger icon), any type of row you want to use.
+
+3. Switch to first tab(squares icon) and drag any tool you need to use: 
+  - button
+  - divider
+  - html
+  - image
+  - text
+
+2. Customize a tool
+  - if you choose and dragged and dropped any tool, buton, divider, html etc, click on the tool, inside template email, where you dropped that tool, to open the right panel with more options.
+
+3. Delete or Duplicate a tool
+  - click on the tool, inside of template email, where you dropped that tool, and you will see a delete icon and an icon for duplicate.
+  - the right panel, that opens when you click on the tool, has also the icons for delete and duplicate.
+
+4. Move a tool
+  - click on the tool, inside of template email, and you will see the arrows icon for drag and drop.
+
+5. Anable More Options 
+  - on the rigt panel, that shows up when you click on a tool, on some tools the More Options switch is off(has an x). Click on that x to enable it.
+
+6. General Rules
+  - use the rigt tab, from the top right tabs, to add general rules to the whole email template container.
