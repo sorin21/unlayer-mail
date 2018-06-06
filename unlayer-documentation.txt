@@ -21,8 +21,10 @@ Email Temaplate Builder Documentation
 4. Move a tool
   - click on the tool, inside of template email, and you will see the arrows icon for drag and drop.
 
-5. Anable More Options 
+5. Enable More Options 
   - on the rigt panel, that shows up when you click on a tool, on some tools the More Options switch is off(has an x). Click on that x to enable it.
 
 6. General Rules
-  - use the rigt tab, from the top right tabs, to add general rules to the whole email template container.
+  a. Simple options: use the rigt tab, from the top right tabs, to add general rules to the whole email template container.
+  b. All options:  click anywhere between blue box, with dashed border, where is the text: "No content here. Drag content from the right.", and the surrounded wide frame, with continuu border
+  Recomandation: add only one row block, from top right menu(hamburger icon), if you want to add a background image to whole email container, and than you can add from tools(squares icon), what you want.

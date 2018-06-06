@@ -3,190 +3,143 @@ import { render } from 'react-dom'
 import EmailEditor from 'react-email-editor'
 import classes from './app.css';
 import axios from "axios";
-var fs = require('fs')
-var createHTML = require('create-html');
-var FileSaver = require("file-saver");
+import alertify from "alertify.js";
 
 
 class App extends Component {
-
   state = {
     template: {},
-    html: '',
+    status: 'Plese select an email template to preview!',
+    type: null,
+    html: null,
+    value: undefined
   };
 
-  componentDidMount = () => {
-    
-
-    // try {
-    //   const json = localStorage.getItem("template");
-    //   const template = JSON.parse(json);
-    //   console.log(this.editor);
-    //   if (template) {
-    //     this.setState(() => ({ template }));
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
-  };
-  componentDidUpdate(prevProps, prevState) {
-
-    this.editor.exportHtml(data => {
-      const { design, html } = data;
-      const imageQR = `<table id="u_content_image_1" class="u_content_image" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-                        <tbody>
-                          <tr>
-                            <td style="overflow-wrap: break-word;padding:10px;" align="left">
-
-                              <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                                <tr>
-                                  <td style="padding-right: 0px; padding-left: 0px;" align="center">
-
-                                    <img align="center" border="0" src="https://pro.easydoevents.com/evguiapp/assets/mosaico/templates/easydoevents/img/qrcode.png"
-                                      alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;width: 100%;max-width: 100px;"
-                                      width="100">
-
-                                  </td>
-                                </tr>
-                              </table>
-
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>`;
-      const position = html.indexOf("</body>");
-      const output = html.substr(0, position) + imageQR + html.substr(position);
-      console.log(html);
-    })
-      // const json = JSON.stringify(this.state.template);
-      // localStorage.setItem("template", json);
-      console.log(this.editor);
-      console.log("componentDidUpdate");
-
-  }
   exportHtml = () => {
     this.editor.exportHtml(data => {
       const { design, html } = data;
-      // const position = JSON.stringify(html).indexOf("body");
-      // const imageQR = `<img align="center" border="0" src="https://pro.easydoevents.com/evguiapp/assets/mosaico/templates/easydoevents/img/qrcode.png"
-      // alt = "Image" title = "Image" style = "outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;width: 100%;max-width: 234px;" width = "234" >`
       const imageQR = `<table id="u_content_image_1" class="u_content_image" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-                        <tbody>
-                          <tr>
-                            <td style="overflow-wrap: break-word;padding:10px;" align="left">
-
-                              <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                                <tr>
-                                  <td style="padding-right: 0px; padding-left: 0px;" align="center">
-
-                                    <img align="center" border="0" src="https://pro.easydoevents.com/evguiapp/assets/mosaico/templates/easydoevents/img/qrcode.png"
-                                      alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;width: 100%;max-width: 100px;"
-                                      width="100">
-
-                                  </td>
-                                </tr>
-                              </table>
-
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>`;
+          <tbody>
+            <tr>
+              <td style="overflow-wrap: break-word;padding:10px;" align="left">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td style="padding-right: 0px; padding-left: 0px;" align="center">
+                      <img align="center" border="0" src="https://pro.easydoevents.com/evguiapp/assets/mosaico/templates/easydoevents/img/qrcode.png"
+                        alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;width: 100%;max-width: 100px;"
+                        width="100">
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>`;
       const position = html.indexOf("</body>");
       const output = html.substr(0, position) + imageQR + html.substr(position);
-      console.log(html);
-      // design.body.rows.map((row) => {
-      //   row.imageQR;
-      //   console.log("objectdsadsadasdd", row);
-      // })
-      
       const template = {
-        eventId: 'ala bala portocala event id',
-        subject: 'this is the subject',
+        type: this.state.type,
+        eventId: "ala bala portocala event id",
+        subject: "this is the subject",
         languageId: 2,
         templateType: 5,
-        htmlTemplate: output,
-        jsonTemplate: JSON.stringify(design),
+        html: output,
+        json: JSON.stringify(design)
       };
-     
-
       axios
-        .post("/getX", template)
+        .post("/save", template)
         .then(response => {
-          
-          // console.log("response: ", response);
-          this.setState(() => ({ html: "The Template was send!" }));
+          this.setState(() => ({ status: "The Template was saved!" }));
+          alertify.success(this.state.status);
         })
         .catch(error => {
-          // const position = JSON.stringify(html).indexOf("</body>");
-          // const output = JSON.stringify(html).substr(0, position) + imageQR + JSON.stringify(html).substr(position);
-          // console.log("html", output);
-          
-          this.setState(() => ({ html: "The Template was not send!" }));
+          this.setState(() => ({ status: "The Template was not saved!" }));
+          alertify.error(this.state.status);
         });
     });
   };
 
+  previewHTML = () => {
+    console.log("this.state.value", this.state.value);
+    const status = this.state.status;
+    if (this.state.value === undefined) {
+      this.setState(() => ({ status: "Plese select an email template to preview!" }));
+      console.log("this.state.value", this.state.status);
+      
+      alertify.error(this.state.status);
+    }
+    if (this.state.value) {
+      this.setState(() => ({
+        status: "The Template was sent to be seen in pop up browser!"
+      }));
+      alertify.success(this.state.status);
+      const html = JSON.parse(JSON.stringify(this.state.html));
+      const x = window.open("","","location=yes, menubar=yes, toolbar=yes, scrollbars=yes, resizable=yes, width=600, height=750");
+      x.document.open();
+      x.document.write(html);
+      x.document.close();
+    }
+  };
 
-  loadDesign = () => {
-    // const json = localStorage.getItem("template");
-    // const template = JSON.parse(json);
-
-    // this.editor.loadDesign(template);
-    this.setState(() => ({ html: 'The Template was loaded in the Editor!'}));    
-    axios.post('/takeJson')
+  emailSelectHandler = event => {
+    const eventTarget = event.target.value;
+    axios
+      .post("/takeJson/all")
       .then(response => {
-        console.log("response: ", JSON.parse(JSON.stringify(response)));
-        this.editor.loadDesign(response.data);
-        this.setState(() => ({ html: "The Template was received!" }));
+        this.setState(() => ({ value: eventTarget }));
+        response.data.map(res => {
+          if (this.state.value === res.type) {
+            this.setState(() => ({ html: res.html }));
+            const str = res.type;
+            this.setState(() => ({ type: str }));
+            for (var i = 0; i < str.length; i++) {
+              if (str.charAt(i) === str.charAt(i).toUpperCase()) {
+                // add a space before uppercase letter
+                const newStr = str.replace(/([a-z])([A-Z])/g, "$1 $2");
+                this.setState(() => ({
+                  status: `The ${newStr} template was received!`
+                }));
+              }
+            }
+            alertify.success(this.state.status);
+            const json = JSON.parse(res.json);
+            this.editor.loadDesign(json);
+          }
+        });
       })
       .catch(error => {
-        this.setState(() => ({ html: "The Template was not received!" }));
-        console.log("error from takeJson", error);
+        this.setState(() => ({ status: "The Template was not received!" }));
+        alertify.error(this.state.status);
       });
   };
 
-  previewHTML = () => {
-    this.editor.exportHtml(data => {
-      const { design, html } = data;
-      const myHTML = html;
-      // window.open(html, "myWindow", "width=800,height=700");
-
-      const x = window.open("", "", "location=yes, menubar=yes, toolbar=yes, scrollbars=yes, resizable=yes, width=600, height=700");
-      x.document.open();
-      x.document.write(myHTML);
-      x.document.close();
-    })
-  }
-
   render() {
-    return <div classes={classes.mainContainer}>
-        <h1>ReactJS Email Editor</h1>
-        {this.state.html && <h3>
-            <strong>Template status: {this.state.html}</strong>
-          </h3>}
+    return (
+      <div classes={classes.mainContainer}>
         <div className={classes.container}>
-          <button onClick={this.exportHtml}>Export HTML</button>
-          <button onClick={this.loadDesign}>Load HTML</button>
-
-          <select>
-            <option value="">Initial Email</option>
-            <option value="">Redminder Email</option>
-            <option value="">Recall Email</option>
-            <option value="">QR Ticket Email</option>
-            <option value="">After Event Email</option>
-            <option value="">Reject Email</option>
-            <option value="">Feedback Email</option>
+          <button onClick={this.exportHtml}>Save</button>
+          <select value={this.state.value} onChange={this.emailSelectHandler}>
+            <option value="" disabled>
+              Email Templates
+            </option>
+            <option value="InitialEmail">Initial Email</option>
+            <option value="ReminderEmail">Reminder Email</option>
+            <option value="RecallEmail">Recall Email</option>
+            <option value="QrTicketEmail">QR Ticket Email</option>
+            <option value="AfterEventEmail">After Event Email</option>
+            <option value="RejectEmail">Reject Email</option>
+            <option value="FeedbackEmail">Feedback Email</option>
           </select>
           <select className={classes.right}>
             <option value="">Romanian</option>
             <option value="">English</option>
             <option value="">French</option>
           </select>
-          <button onClick={this.previewHTML}>See HTML</button>
+          <button onClick={this.previewHTML}>Preview</button>
         </div>
-
         <EmailEditor ref={editor => (this.editor = editor)} />
-      </div>;
+      </div>
+    );
   }
 }
 

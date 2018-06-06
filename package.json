@@ -26,6 +26,7 @@
     "webpack-node-externals": "^1.7.2"
   },
   "dependencies": {
+    "alertify.js": "^1.0.12",
     "axios": "^0.18.0",
     "cors": "^2.8.4",
     "create-html": "^4.1.0",
