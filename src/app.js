@@ -12,10 +12,11 @@ class App extends Component {
     status: 'Plese select an email template to preview!',
     type: null,
     html: null,
-    value: undefined
+    json: null,
+    value: ''
   };
 
-  exportHtml = () => {
+  saveTemplate = () => {
     this.editor.exportHtml(data => {
       const { design, html } = data;
       const imageQR = `<table id="u_content_image_1" class="u_content_image" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
@@ -46,8 +47,7 @@ class App extends Component {
         html: output,
         json: JSON.stringify(design)
       };
-      axios
-        .post("/save", template)
+      axios.post("/save", template)
         .then(response => {
           this.setState(() => ({ status: "The Template was saved!" }));
           alertify.success(this.state.status);
@@ -60,18 +60,10 @@ class App extends Component {
   };
 
   previewHTML = () => {
-    console.log("this.state.value", this.state.value);
-    const status = this.state.status;
-    if (this.state.value === undefined) {
-      this.setState(() => ({ status: "Plese select an email template to preview!" }));
-      console.log("this.state.value", this.state.status);
-      
-      alertify.error(this.state.status);
-    }
-    if (this.state.value) {
-      this.setState(() => ({
-        status: "The Template was sent to be seen in pop up browser!"
-      }));
+    alertify.error(this.state.status);
+    if (this.state.html && this.state.html !== null) {
+      this.setState(() => ({ status: "The Template was sent to be seen in pop up browser!" }));
+      console.log('daa');
       alertify.success(this.state.status);
       const html = JSON.parse(JSON.stringify(this.state.html));
       const x = window.open("","","location=yes, menubar=yes, toolbar=yes, scrollbars=yes, resizable=yes, width=600, height=750");
@@ -81,26 +73,29 @@ class App extends Component {
     }
   };
 
+  addSpaceBeforeUppercase = (str) => {
+    for (var i = 0; i < str.length; i++) {
+      if (str.charAt(i) === str.charAt(i).toUpperCase()) {
+        // add a space before uppercase letter
+        const newStr = str.replace(/([a-z])([A-Z])/g, "$1 $2");
+        this.setState(() => ({ status: `The ${newStr} template was received!` }));
+        return newStr;
+      }
+    }
+  }
+
   emailSelectHandler = event => {
     const eventTarget = event.target.value;
-    axios
-      .post("/takeJson/all")
+    this.setState(() => ({ value: eventTarget }));
+    axios.post("/takeJson/all")
       .then(response => {
-        this.setState(() => ({ value: eventTarget }));
         response.data.map(res => {
           if (this.state.value === res.type) {
             this.setState(() => ({ html: res.html }));
+            this.setState(() => ({ json: res.json }));
             const str = res.type;
             this.setState(() => ({ type: str }));
-            for (var i = 0; i < str.length; i++) {
-              if (str.charAt(i) === str.charAt(i).toUpperCase()) {
-                // add a space before uppercase letter
-                const newStr = str.replace(/([a-z])([A-Z])/g, "$1 $2");
-                this.setState(() => ({
-                  status: `The ${newStr} template was received!`
-                }));
-              }
-            }
+            this.addSpaceBeforeUppercase(str);
             alertify.success(this.state.status);
             const json = JSON.parse(res.json);
             this.editor.loadDesign(json);
@@ -108,7 +103,8 @@ class App extends Component {
         });
       })
       .catch(error => {
-        this.setState(() => ({ status: "The Template was not received!" }));
+        const selectedOption = this.addSpaceBeforeUppercase(this.state.value);
+        this.setState(() => ({ status: `The ${selectedOption} template was not received! ` }));
         alertify.error(this.state.status);
       });
   };
@@ -117,7 +113,7 @@ class App extends Component {
     return (
       <div classes={classes.mainContainer}>
         <div className={classes.container}>
-          <button onClick={this.exportHtml}>Save</button>
+          <button onClick={this.saveTemplate}>Save</button>
           <select value={this.state.value} onChange={this.emailSelectHandler}>
             <option value="" disabled>
               Email Templates
