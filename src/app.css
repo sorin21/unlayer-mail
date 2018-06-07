@@ -9,7 +9,6 @@ html, body {
   flex-direction: column;
   position: relative;
   height: 100%;
-  border: 2px solid red;
 }
 .container {
   flex: 1;
