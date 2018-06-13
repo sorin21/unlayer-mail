@@ -50,21 +50,12 @@ class App extends Component {
       } else {
         output = html;
       }
-<<<<<<< HEAD
-      
-      const template = { ...this.state.template};
-      template.html = output;
-      template.json = JSON.stringify(design);
-      const templateType = this.addSpaceBeforeUppercase(this.state.template.type);
-      
-=======
 
       const template = { ...this.state.template };
       template.html = output;
       template.json = JSON.stringify(design);
       const templateType = this.addSpaceBeforeUppercase(this.state.template.type);
 
->>>>>>> 05912fb1fab796930597beb52323b48d502f2a6f
       axios.post("/save", template)
         .then(response => {
           this.setState(() => ({ status: `${templateType} Template was saved!` }));
@@ -80,11 +71,7 @@ class App extends Component {
   previewHTML = () => {
     if (this.state.template.html !== null) {
       const html = JSON.parse(JSON.stringify(this.state.template.html));
-<<<<<<< HEAD
-      const x = window.open("","","location=yes, menubar=yes, toolbar=yes, scrollbars=yes, resizable=yes, width=600, height=750");
-=======
       const x = window.open("", "", "location=yes, menubar=yes, toolbar=yes, scrollbars=yes, resizable=yes, width=600, height=750");
->>>>>>> 05912fb1fab796930597beb52323b48d502f2a6f
       x.document.open();
       x.document.write(html);
       x.document.close();
@@ -134,11 +121,6 @@ class App extends Component {
   render() {
     return (
       <div className={classes.mainContainer}>
-<<<<<<< HEAD
-      {this.first}
-      {this.sec}
-=======
->>>>>>> 05912fb1fab796930597beb52323b48d502f2a6f
         <div className={classes.container}>
           <button onClick={this.saveTemplate}>Save</button>
           <select value={this.state.value} onChange={this.emailSelectHandler}>
