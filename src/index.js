@@ -3,9 +3,10 @@ import ReactDOM from "react-dom";
 import { Provider } from 'react-redux';
 import classes from "./index.css";
 import App from "./app";
-import appClass from "./app.css";
+import appClass from "./app.scss";
 import axios from "axios";
 import alertify from "alertify.js";
+// import "normalize.css/normalize.css";
 
 // const App = () => {
 //   return <div className={classes.App}> Hello Test React!!</div>

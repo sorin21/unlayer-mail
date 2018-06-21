@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { createStore, combineReducers } from 'redux';
 import { render } from 'react-dom'
 import EmailEditor from 'react-email-editor'
-import classes from './app.css';
+import classes from './app.scss';
 import axios from "axios";
 import alertify from "alertify.js";
 
